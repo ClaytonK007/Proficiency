@@ -9,6 +9,7 @@ Requirements:
 - validation : valid name and surname
 - validation : prompt user if entry already exists
 
+How to deploy and test:
 - download or pull project repository
 - create a virtual environment in the repository - run "python -m venv .venv" in your terminal 
 - run virtual environment by running "./.venv/Scripts/activate" in your terminal 
