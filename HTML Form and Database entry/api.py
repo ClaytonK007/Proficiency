@@ -1,3 +1,4 @@
+from datetime import datetime
 from fastapi import FastAPI, Request, Form, Depends
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
@@ -8,24 +9,21 @@ import db_model
 from validation import *
 
 #   1. Create instance to initialize Fast API.
-#   2. Configure backend to communicate with frontend.
+#   2. Create database from database model and generate table
 #   3. Set template directory to render HTML templates for the frontend.
 app = FastAPI()
 db_model.Base.metadata.create_all(bind=engine)
 templates = Jinja2Templates(directory="templates")
-
 
 #   Display the form to add a new user
 @app.get("/", response_class=HTMLResponse)
 def load_home(request: Request):
     return templates.TemplateResponse(request, "index.html")
 
-
 #   Get all users from the database
 @app.get("/users")
 def get_all_users(db: Session = Depends(get_db)):
     return db.query(db_model.User).all()
-
 
 #  Handle form submission and save user data to the database
 @app.post("/submit", response_class=HTMLResponse)
@@ -38,7 +36,7 @@ def register_user(
     db: Session = Depends(get_db),
 ):
     try:
-        parsed_dob = datetime.strptime(dob, "%d-%m-%Y").date()
+        parsed_dob = datetime.strptime(dob, "%d-%m-%Y")
     except ValueError:
         return templates.TemplateResponse(
             request,
@@ -82,7 +80,12 @@ def register_user(
             {"error": "User with this ID number already exists."},
         )
 
-    new_user = db_model.User(name=name, surname=surname, idNo=idNo, dob=parsed_dob)
+    new_user = db_model.User(
+        name=name,
+        surname=surname,
+        idNo=idNo,
+        dob=parsed_dob.strftime("%d-%m-%Y"),
+    )
     db.add(new_user)
     db.commit()
 
@@ -92,6 +95,19 @@ def register_user(
         {"name": name, "surname": surname},
     )
 
+#   Update the user data in the database
+@app.put("/user/{id}")
+def update_user(id: int, user: User, db: Session = Depends(get_db)):
+    db_user = db.query(db_model.User).filter(db_model.User.id == id).first()
+    if db_user:
+        db_user.name = user.name
+        db_user.surname = user.surname
+        db_user.idNo = user.idNo
+        db_user.dob = user.dob
+        db.commit()
+        return {"message": "User updated successfully."}
+    else:
+        return {"message": "User not found. Cannot be updated."}    
 
 if __name__ == "__main__":
     import uvicorn
