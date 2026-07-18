@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Information Form</title>
+    <!-- Include Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+<body class="bg-light p-5">
+
+    <div class="container" style="max-width: 500px;">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h3 class="card-title mb-4"> Hoooray!!!</h3>
+                {% if name and surname %}    
+                    <h3 class="card-title mb-4"> Hi {{ name }} {{ surname }}! Your information has been successfully submitted.</h3>
+                {% endif %}
+                    <div class="d-flex justify-content-between mt-4">
+                        <!-- BACK button using a styled link to return to a previous page -->
+                        <a href="/" class="btn btn-secondary w-49">Go Back</a>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Bootstrap JS (Optional, but needed for specific components) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</body>
+</html>
