@@ -21,5 +21,6 @@
     - click on the down arrow by the "Get all users" get method.
     - click on "try it out" button and then click on "execute" button.
     - if successful, it will return a 200 success reponse and display the entry in the response body.
+    - Alternatively, download a client like DB Browser and open the db file to test in the form was submitted succesfully.
 
- Alternatively, download a client like DB Browser and open the db file to test in the form was submitted succesfully.
+ 
