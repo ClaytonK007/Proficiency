@@ -20,4 +20,6 @@
 - to check if entry is saved in database go to "http://127.0.0.1:8000/docs" or "localhost:8000/docs" in your browser.
     - click on the down arrow by the "Get all users" get method.
     - click on "try it out" button and then click on "execute" button.
-    - if successful, it will return a 200 success reponse and display the entry in the response body. 
+    - if successful, it will return a 200 success reponse and display the entry in the response body.
+
+ Alternatively, download a client like DB Browser and open the db file to test in the form was submitted succesfully.
