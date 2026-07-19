@@ -40,35 +40,35 @@ def register_user(
     except ValueError:
         return templates.TemplateResponse(
             request,
-            "error.html",
+            "confirmation.html",
             {"error": "Date of birth must be in DD-MM-YYYY format."},
         )
 
     if not validate_name(name):
         return templates.TemplateResponse(
             request,
-            "error.html",
+            "confirmation.html",
             {"error": "Name must be at least 2 letters long and contain no numbers."},
         )
 
     if not validate_name(surname):
         return templates.TemplateResponse(
             request,
-            "error.html",
+            "confirmation.html",
             {"error": "Surname must be at least 2 letters long and contain no numbers."},
         )
 
     if not validate_south_african_id(idNo):
         return templates.TemplateResponse(
             request,
-            "error.html",
+            "confirmation.html",
             {"error": "ID number must be a valid South African ID number with 13 digits."},
         )
 
     if not validate_dob_matches_id(dob, idNo):
         return templates.TemplateResponse(
             request,
-            "error.html",
+            "confirmation.html",
             {"error": "Date of birth does not match the first six digits of the ID number."},
         )
 
@@ -76,7 +76,7 @@ def register_user(
     if existing_user:
         return templates.TemplateResponse(
             request,
-            "error.html",
+            "confirmation.html",
             {"error": "User with this ID number already exists."},
         )
 
@@ -95,7 +95,7 @@ def register_user(
         {"name": name, "surname": surname},
     )
 
-#   Update the user data in the database
+#   Update a user data in the database
 @app.put("/user/{id}")
 def update_user(id: int, user: User, db: Session = Depends(get_db)):
     db_user = db.query(db_model.User).filter(db_model.User.id == id).first()
@@ -108,6 +108,18 @@ def update_user(id: int, user: User, db: Session = Depends(get_db)):
         return {"message": "User updated successfully."}
     else:
         return {"message": "User not found. Cannot be updated."}    
+
+#   Delete a user data in the database
+@app.delete("/user/{id}")
+def delete_user(id: int, user: User, db: Session = Depends(get_db)):
+    db_user = db.query(db_model.User).filter(db_model.User.id == id).first()
+    if db_user:
+        db.delete(db_user)
+        db.commit()
+        return {"message": "User deleted successfully."}
+    else:
+        return {"message": "User not found. Cannot delete user."}
+    
 
 if __name__ == "__main__":
     import uvicorn

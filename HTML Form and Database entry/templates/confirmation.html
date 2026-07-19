@@ -12,14 +12,19 @@
     <div class="container" style="max-width: 500px;">
         <div class="card shadow-sm">
             <div class="card-body">
-                <h3 class="card-title mb-4"> Hoooray!!!</h3>
-                {% if name and surname %}    
-                    <h3 class="card-title mb-4"> Hi {{ name }} {{ surname }}! Your information has been successfully submitted.</h3>
-                {% endif %}
-                    <div class="d-flex justify-content-between mt-4">
-                        <!-- BACK button using a styled link to return to a previous page -->
-                        <a href="/" class="btn btn-secondary w-49">Go Back</a>
-                    </div>
+                <h3 class="card-title mb-4">
+                    {% if name and surname %}    
+                        Hi {{ name }} {{ surname }}! Your information has been successfully submitted.
+                    {% elif error %}
+                        Sorry, {{ error }}. Please go back and try again.
+                    {% else %}
+                        Sorry, an error occurred. Please go back and try again.
+                    {% endif %}
+                </h3>
+                <div class="d-flex justify-content-between mt-4">
+                    <!-- BACK button using a styled link to return to a previous page -->
+                    <a href="/" class="btn btn-secondary w-49">Go Back</a>
+                </div>
             </div>
         </div>
     </div>
