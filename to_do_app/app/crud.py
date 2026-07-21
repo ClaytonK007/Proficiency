@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import desc
-import models 
+from . import models 
 
 def get_todos(db: Session):
     return db.query(models.Task).order_by(desc(models.Task.created_at)).all()

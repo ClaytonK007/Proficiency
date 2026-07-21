@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}My To-Dos{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-7">
+    <h1 class="mb-4 text-center">My To-Do List</h1>
+
+    <form action="/todos" method="post" class="input-group mb-4">
+      <input type="text" name="title" class="form-control" placeholder="What needs doing?" required maxlength="200">
+      <button class="btn btn-primary" type="submit">Add</button>
+    </form>
+
+    {% if todos %}
+    <ul class="list-group shadow-sm">
+      {% for todo in todos %}
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <form action="/todos/{{ todo.id }}/toggle" method="post" class="form-check d-flex align-items-center mb-0">
+          <input class="form-check-input me-2" type="checkbox" onchange="this.form.submit()"
+                 {% if todo.completed %}checked{% endif %}>
+          <span class="{% if todo.completed %}text-decoration-line-through text-muted{% endif %}">
+            {{ todo.title }}
+          </span>
+        </form>
+
+        <button type="button" class="btn btn-sm btn-outline-danger"
+                data-bs-toggle="modal" data-bs-target="#deleteModal{{ todo.id }}">
+          Delete
+        </button>
+
+        <!-- Bootstrap modal: confirm-before-delete, powered entirely by Bootstrap's own JS bundle -->
+        <div class="modal fade" id="deleteModal{{ todo.id }}" tabindex="-1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body">
+                Delete "<strong>{{ todo.title }}</strong>"? This can't be undone.
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form action="/todos/{{ todo.id }}/delete" method="post" class="mb-0">
+                  <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <div class="alert alert-secondary text-center" role="alert">
+      No to-dos yet — add one above!
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
