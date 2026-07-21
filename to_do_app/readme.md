@@ -4,7 +4,7 @@
 
 - allow a task to be added
 - toggle a task to mark it as completed
-- allow a task to be deleted\
+- allow a task to be deleted
 
 ## How to deploy and test:
 - download or pull project repository
