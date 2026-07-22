@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card shadow-sm mx-auto" style="max-width: 600px;">
+    <div class="card-body text-center">
+        <p class="fs-4 fst-italic">"{{ quote.text }}"</p>
+        <p class="text-muted mb-4">— {{ quote.reference }}</p>
+
+        <div class="d-flex justify-content-center gap-2">
+            <a href="/" class="btn btn-primary">Get another quote</a>
+
+            <form method="post" action="/favourites/add">
+                <input type="hidden" name="text" value="{{ quote.text }}">
+                <input type="hidden" name="reference" value="{{ quote.reference }}">
+                <button type="submit" class="btn btn-outline-success">
+                    ⭐ Save to favourites
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

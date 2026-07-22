@@ -1,4 +1,3 @@
-from pathlib import Path
 from fastapi import FastAPI, Request, Depends, Form
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
@@ -9,8 +8,7 @@ from .database import engine, get_db
 from .quotes_data import get_random_quote
 
 app = FastAPI()
-BASE_DIR = Path(__file__).resolve().parent
-templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
+templates = Jinja2Templates(directory="templates")
 models.Base.metadata.create_all(bind=engine)
 
 @app.get("/")

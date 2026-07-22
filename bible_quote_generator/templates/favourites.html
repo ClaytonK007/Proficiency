@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-4">Your Favourites</h2>
+
+{% if favourites %}
+    <div class="list-group mx-auto" style="max-width: 700px;">
+        {% for fav in favourites %}
+        <div class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+                <p class="mb-1 fst-italic">"{{ fav.text }}"</p>
+                <small class="text-muted">— {{ fav.reference }}</small>
+            </div>
+            <form method="post" action="/favourites/remove/{{ fav.id }}">
+                <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p class="text-muted">You haven't saved any quotes yet.</p>
+{% endif %}
+<div class="d-flex justify-content-center">
+    <a href="/" class="btn btn-primary">Go Back</a>
+</div>
+{% endblock %}

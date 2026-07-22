@@ -14,7 +14,7 @@ def get_random_quote():
         data = response.json()[0]
 
         text = data["text"].strip()
-        reference = f"{data["booname"]} {data["chapter"]}:{data["verse"]}"
+        reference = f"{data["bookname"]} {data["chapter"]}:{data["verse"]}"
         return {"text": text, "reference": reference}
 
     except (requests.RequestException, KeyError, IndexError, ValueError):
