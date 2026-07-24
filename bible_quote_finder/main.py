@@ -57,13 +57,16 @@ def add_to_favourites(
     conn.close()
     return RedirectResponse(url=f"/search?keyword={topic}", status_code=303)
 
+@app.get("/favourites")
+def favourites(request: Request):
+    return templates.TemplateResponse(request, "favourites.html", {"favourites": get_favourites()})
+
 @app.post("/favourites/delete/{favourite_id}")
-def delete_favourites(favourite_id: int, keyword: str = Form(...)):
+def delete_favourites(request: Request, favourite_id: int):
     conn = sqlite3.connect(DB_PATH)
     conn.execute("DELETE FROM favourites WHERE id = ?", (favourite_id,))
     conn.commit()
     conn.close()
+    
+    return templates.TemplateResponse(request, "favourites.html", {"favourites": get_favourites()})
 
-    if keyword:
-        return RedirectResponse(url=f"/search?keyword={keyword}", status_code=303)
-    return RedirectResponse(url="/", status_code=303)
