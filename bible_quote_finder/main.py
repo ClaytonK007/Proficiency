@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request, Form
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 import requests
+import math
 from database import *
 
 app = FastAPI()
@@ -20,17 +21,28 @@ def home(request: Request):
     return templates.TemplateResponse(
         request,
         "index.html",
-        {"quotes": [], "favourites": get_favourites(), "keyword": "", "error": None})
+        {
+            "quotes": [], 
+            "keyword": "", 
+            "error": None, 
+            "status": "", 
+            "page": 1, 
+            "total_pages": 0
+            }
+    )
 
 @app.get("/search")
-def search(request: Request, keyword: str = ""):
+def search(request: Request, keyword: str = "", status: str = "", page: int = 1):
     keyword = keyword.strip()
     quotes = []
     error = None
+    total_pages = 0
+    limit = 20
 
     if keyword:
         try:
-            quotes = search_bible(keyword, limit=20)
+            quotes, total = search_bible(keyword, limit=limit, page=page)
+            total_pages = math.ceil(total / limit) if total else 0
             if not quotes:
                 error = f"No verse for '{keyword}'. Please try another topic."
         except requests.RequestException:
@@ -39,7 +51,14 @@ def search(request: Request, keyword: str = ""):
     return templates.TemplateResponse(
         request,
         "index.html",
-        {"quotes": quotes, "favourites": get_favourites(), "keyword": keyword, "error": error}
+        {
+            "quotes": quotes, 
+            "keyword": keyword,
+            "error": error, 
+            "status": status,
+            "page": page,
+            "total_pages": total_pages
+            }
     )
 
 @app.post("/favourites/add")
@@ -49,13 +68,16 @@ def add_to_favourites(
     topic: str = Form(...)
     ):
     conn = sqlite3.connect(DB_PATH)
-    conn.execute(
-        "INSERT INTO favourites (reference, text, topic) VALUES (?, ?, ?)",
+    cursor = conn.execute(
+        "INSERT OR IGNORE INTO favourites (reference, text, topic) VALUES (?, ?, ?)",
         (reference, text, topic)
     )
     conn.commit()
+    was_saved = cursor.rowcount > 0
     conn.close()
-    return RedirectResponse(url=f"/search?keyword={topic}", status_code=303)
+
+    status = "saved" if was_saved else "duplicate"
+    return RedirectResponse(url=f"/search?keyword={topic}&status={status}", status_code=303)
 
 @app.get("/favourites")
 def favourites(request: Request):
@@ -67,6 +89,4 @@ def delete_favourites(request: Request, favourite_id: int):
     conn.execute("DELETE FROM favourites WHERE id = ?", (favourite_id,))
     conn.commit()
     conn.close()
-    
-    return templates.TemplateResponse(request, "favourites.html", {"favourites": get_favourites()})
-
+    return RedirectResponse(url="/favourites", status_code=303)

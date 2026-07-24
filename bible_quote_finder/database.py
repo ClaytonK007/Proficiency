@@ -11,7 +11,7 @@ def init_db():
     conn.execute("""
         CREATE TABLE IF NOT EXISTS favourites (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            reference TEXT NOT NULL,
+            reference TEXT NOT NULL UNIQUE,
             text TEXT NOT NULL,
             topic TEXT NOT NULL
         )
@@ -29,13 +29,13 @@ def clean_verse_text(raw_html: str) -> str:
     return text
 
 
-def search_bible(keyword: str, limit: int = 20):
+def search_bible(keyword: str, limit: int = 20, page: int = 1):
     params = {
         "search": keyword,
         "match_case": "false",
         "match_whole": "true",
         "limit": limit,
-        "page": 1,
+        "page": page,
     }
     response = requests.get(BIBLE_SEARCH_URL, params=params, timeout=8)
     response.raise_for_status()
@@ -48,4 +48,4 @@ def search_bible(keyword: str, limit: int = 20):
             "ref": f"{book_name} {verse['chapter']}:{verse['verse']}",
             "text": clean_verse_text(verse["text"]),
         })
-    return results
+    return results, data.get("total", 0)

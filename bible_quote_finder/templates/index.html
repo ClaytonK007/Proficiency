@@ -1,9 +1,20 @@
 {% extends "base.html" %}
 {% block content %}
-<body class="bg-light">
   <div class="container py-5" style="max-width: 720px;">
     <h1 class="mb-4 text-center">Bible Quote Finder</h1>
     <a class="btn btn-outline-light" href="/favourites">Favourites</a>
+
+    {% if status == "saved" %}
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        Saved to favourites!
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% elif status == "duplicate" %}
+      <div class="alert alert-info alert-dismissible fade show" role="alert">
+        That verse is already in your favourites.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endif %}
 
     <form action="/search" method="get" class="input-group mb-4">
       <input
@@ -42,5 +53,20 @@
         <p class="text-muted">Search for a word or topic above to see matching verses.</p>
       {% endif %}
     </div>
+    {% if total_pages > 1 %}
+      <nav aria-label="Search results pages">
+        <ul class="pagination justify-content-center">
+          <li class="page-item {% if page <= 1 %}disabled{% endif %}">
+            <a class="page-link" href="/search?keyword={{ keyword }}&page={{ page - 1 }}">Previous</a>
+          </li>
+          <li class="page-item disabled">
+            <span class="page-link">Page {{ page }} of {{ total_pages }}</span>
+          </li>
+          <li class="page-item {% if page >= total_pages %}disabled{% endif %}">
+            <a class="page-link" href="/search?keyword={{ keyword }}&page={{ page + 1 }}">Next</a>
+          </li>
+        </ul>
+      </nav>
+    {% endif %}
   </div>
 {% endblock %}
