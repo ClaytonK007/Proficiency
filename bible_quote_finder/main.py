@@ -35,7 +35,7 @@ def search(request: Request, keyword: str = ""):
 
     if keyword:
         try:
-            response = requests.get(BIBLE_SEARCH, params = {"q": keyword, "limit": 20}, timeout = 8)
+            response = requests.get(BIBLE_SEARCH_URL, params = {"q": keyword, "limit": 20}, timeout = 8)
             response.raise_for_status()
             data = response.json()
             quotes = data.get("results", [])
@@ -57,8 +57,9 @@ def add_to_favourites(
     topic:  str = Form(...)
     ):
     conn = sqlite3.connect(DB_PATH)
-    conn.execute("INSERT INTO favourites (reference, text, topic) 
-                    VALUES (?, ?, ?)", (reference, text, topic),", 
+    conn.execute(
+        "INSERT INTO favourites (reference, text, topic) VALUES (?, ?, ?)", 
+        (reference, text, topic)
     )
     conn.commit()
     conn.close()
@@ -67,5 +68,10 @@ def add_to_favourites(
 @app.post("/favourites/delete/{favourite_id}")
 def delete_favourites(favourite_id: int, keyword: str = Form(...)):
     conn = sqlite3.connect(DB_PATH)
+    conn.execute("DELETE FROM favourites WHERE id = ?", (favourite_id))
+    conn.commit()
+    conn.close()
 
-    pass
+    if keyword:
+        return RedirectResponse(url=f"/search?keyword{keyword}", status_code=303)
+    return RedirectResponse(url="/", status_code=303)
