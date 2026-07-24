@@ -4,4 +4,4 @@
 2. CSV project - generating data and file creation
 3. To-Do list
 4. Bible Quote Generator
-5. Bible Quote Finder - WIP
+5. Bible Quote Finder
