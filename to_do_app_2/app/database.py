@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-SQLALCHEMY_DATABASE_URL = "postgresql://postgres:password!@localhost:5432/todos_db"
+SQLALCHEMY_DATABASE_URL = "postgresql://postgres:(password)@localhost:5432/todos_db" # your PostgreSQL password
 Base = declarative_base()
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
