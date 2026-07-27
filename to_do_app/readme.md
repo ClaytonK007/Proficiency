@@ -5,6 +5,7 @@
 - allow a task to be added
 - toggle a task to mark it as completed
 - allow a task to be deleted
+  
 (switch branches to V2 for project with PostgreSQL database)
 
 ## How to deploy and test:
