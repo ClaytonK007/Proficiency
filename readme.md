@@ -5,4 +5,5 @@
 3. To-Do list
 4. Bible Quote Generator
 5. Bible Quote Finder
-6. Expense Tracker - WIP
+6. Expense Tracker
+7. Advanced Expense Tracker - WIP
