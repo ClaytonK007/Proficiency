@@ -12,25 +12,26 @@ def init_db():
             description TEXT NOT NULL,
             category TEXT NOT NULL,
             amount REAL NOT NULL,
-            date TEXT NOT NULL,
+            date TEXT NOT NULL
         )
     """)
     conn.commit()
-    conn.close
+    conn.close()
 
 def add_expense(description, category, amount, expense_date):
     conn = sqlite3.connect(DB_PATH)
-    conn.execute("""
-        "INSERT INTO expenses (description, category, amount, date) 
-            VALUES (?, ?, ?, ?), (description, category, amount, expense_date)
-    """)
+    conn.execute(
+        "INSERT INTO expenses (description, category, amount, date) VALUES (?, ?, ?, ?)",
+        (description, category, amount, expense_date)
+    )
     conn.commit()
     conn.close()
 
 
 def get_expenses():
     conn = sqlite3.connect(DB_PATH)
-    rows = conn.execute("SELECT * FROM expenses ORDER BY date, DESC, id DESC").fetchall()
+    conn.row_factory = sqlite3.Row
+    rows = conn.execute("SELECT * FROM expenses ORDER BY date DESC, id DESC").fetchall()
     conn.close()
     return [dict(row) for row in rows]
 
@@ -54,6 +55,6 @@ def get_category_totals():
 
 def get_total_spent():
     conn = sqlite3.connect(DB_PATH)
-    row = conn.execute("SELECT SUM(aount) FROM expenses").fetchone()
+    row = conn.execute("SELECT SUM(amount) FROM expenses").fetchone()
     conn.close()
     return row[0] or 0.0

@@ -11,7 +11,7 @@ init_db()
 
 
 @app.get("/")
-def get_expenses(request: Request):
+def index(request: Request):
     expenses = get_expenses()
     category_totals = get_category_totals()
     total_spent = get_total_spent()
@@ -32,7 +32,7 @@ def get_expenses(request: Request):
 
 
 @app.post("/add")
-def add_expenses(
+def add_expense_route(
     description: str = Form(...),
     category: str = Form(...),
     amount: float = Form(...),
@@ -42,7 +42,7 @@ def add_expenses(
     return RedirectResponse(url="/", status_code=303)
 
 
-@app.post("delete/{expense_id}")
-def delete_expense(expense_id: int):
+@app.post("/delete/{expense_id}")
+def delete_expense_route(expense_id: int):
     delete_expense(expense_id)
     return RedirectResponse(url="/", status_code=303)

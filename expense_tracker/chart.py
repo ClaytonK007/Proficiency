@@ -11,8 +11,8 @@ def generate_category_chart(category_totals):
     labels = [row["category"] for row in category_totals]
     values = [row["total"] for row in category_totals]
 
-    fig, ax = plt.subplots(figsize=(6,6))
-    ax.pie(values, lables=labels, autopct="%1.1F", startangle=90)
+    fig, ax = plt.subplots(figsize=(6, 6))
+    ax.pie(values, labels=labels, autopct="%1.1f%%", startangle=90)
     ax.axis("equal")
     ax.set_title("Spending by Category")
 
@@ -21,5 +21,5 @@ def generate_category_chart(category_totals):
     plt.close(fig)
     buffer.seek(0)
 
-    encoded = base64.b64decode(buffer.read()).decode("utf-8")
+    encoded = base64.b64encode(buffer.read()).decode("utf-8")
     return encoded
