@@ -4,7 +4,7 @@
 
 - Allow user to add expenses (description, category, amount, date) and delete expenses
 - Save data to database
-- Display expenses a table
+- Display expenses on a table
 - Display a live spending breakdown by category — updates automatically every time an expense is added or deleted.
 
 ## How to deploy and test:
