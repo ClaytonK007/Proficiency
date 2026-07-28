@@ -27,12 +27,12 @@ def register(request: Request, username: str = Form(...), password: str = Form(.
         return templates.TemplateResponse(
             request, "register.html", {"error": "That username is already taken"}
         )
-    return RedirectResponse(url="/login", status_code=303)
+    return RedirectResponse(url="/login?registered=1", status_code=303)
 
 
 @app.get("/login")
-def login_form(request: Request):
-    return templates.TemplateResponse(request, "login.html", {})
+def login_form(request: Request, registered: bool = False):
+    return templates.TemplateResponse(request, "login.html", {"registered": registered})
 
 
 @app.post("/login")
@@ -55,7 +55,7 @@ def logout(request: Request):
 
 
 @app.get("/")
-def index(request: Request, chart_type: str = "pie"):
+def index(request: Request, chart_type: str = "pie", deleted: bool = False):
     user_id = get_current_user(request)
     if not user_id:
         return RedirectResponse(url="/login", status_code=303)
@@ -84,7 +84,8 @@ def index(request: Request, chart_type: str = "pie"):
             "chart_type": chart_type,
             "categories": CATEGORIES,
             "today": today.isoformat(),
-            "username": request.session.get("username")
+            "username": request.session.get("username"),
+            "deleted": deleted
         }
     )
 
@@ -110,4 +111,4 @@ def delete_expense_route(request: Request, expense_id: int):
     if not user_id:
         return RedirectResponse(url="/login", status_code=303)
     delete_expense(user_id, expense_id)
-    return RedirectResponse(url="/", status_code=303)
+    return RedirectResponse(url="/?deleted=1", status_code=303)

@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
 
+{% if deleted %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    Expense deleted.
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+
 <div class="row mb-4">
   <div class="col-md-5">
     <div class="card">
@@ -92,7 +99,7 @@
         <td>{{ exp.date }}</td>
         <td>{{ exp.description }}</td>
         <td><span class="badge bg-secondary">{{ exp.category }}</span></td>
-        <td class="text-end">${{ "%.2f"|format(exp.amount) }}</td>
+        <td class="text-end">R{{ "%.2f"|format(exp.amount) }}</td>
         <td>
           <form action="/delete/{{ exp.id }}" method="post" class="m-0">
             <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>

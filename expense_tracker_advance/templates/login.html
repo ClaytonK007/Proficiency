@@ -5,6 +5,12 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Log in</h5>
+                {% if registered %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    Account created successfully! Please log in.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endif %}                
                 {% if error %}<div class="alert alert-danger">{{ error }}</div>{% endif %}
                 <form method="post" action="/login">
                     <div class="mb-3">
