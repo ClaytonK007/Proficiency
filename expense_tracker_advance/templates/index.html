@@ -35,7 +35,7 @@
     <div class="card mt-4">
       <div class="card-body text-center">
         <h6 class="text-muted">Total Spent</h6>
-        <h2>${{ "%.2f"|format(total_spent) }}</h2>
+        <h2>R{{ "%.2f"|format(total_spent) }}</h2>
       </div>
     </div>
   </div>
@@ -43,11 +43,32 @@
   <div class="col-md-7">
     <div class="card">
       <div class="card-body text-center">
-        <h5 class="card-title">Spending by Category</h5>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="card-title mb-0">Spending by Category (This Month)</h5>
+          <div class="btn-group btn-group-sm">
+            <a href="/?chart_type=pie" class="btn btn-outline-secondary {% if chart_type == 'pie' %}active{% endif %}">Pie</a>
+            <a href="/?chart_type=bar" class="btn btn-outline-secondary {% if chart_type == 'bar' %}active{% endif %}">Bar</a>
+          </div>
+        </div>
         {% if chart_image %}
           <img src="data:image/png;base64,{{ chart_image }}" class="img-fluid" alt="Category breakdown chart">
         {% else %}
-          <p class="text-muted">Add an expense to see your breakdown.</p>
+          <p class="text-muted">Add an expense this month to see your breakdown.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row mb-4">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body text-center">
+        <h5 class="card-title">Monthly Spending Trend</h5>
+        {% if trend_image %}
+          <img src="data:image/png;base64,{{ trend_image }}" class="img-fluid" alt="Monthly trend chart">
+        {% else %}
+          <p class="text-muted">Add expenses across multiple months to see a trend.</p>
         {% endif %}
       </div>
     </div>
@@ -83,5 +104,4 @@
     {% endfor %}
   </tbody>
 </table>
-
 {% endblock %}

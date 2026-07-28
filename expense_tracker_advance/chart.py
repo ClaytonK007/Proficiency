@@ -42,7 +42,7 @@ def generate_monthly_trend_chart(monthly_totals):
     totals = [row["total"] for row in monthly_totals]
 
     fig, ax = plt.subplots(figsize=(8, 4))
-    ax.plot(months, totals, marker="0", color="#4a90d9")
+    ax.plot(months, totals, marker="o", color="#4a90d9")
     ax.set_ylabel("Amount (R)")
     ax.set_title("Monthly Spending Trend")
     plt.xticks(rotation=30, ha="right")

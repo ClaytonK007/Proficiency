@@ -43,8 +43,12 @@ def login(request: Request, username: str = Form(...), password: str = Form(...)
             request, "login.html", {"error": "Invalid username or password."}
         )
 
+    request.session["user_id"] = user["id"]
+    request.session["username"] = user["username"]
+    return RedirectResponse(url="/", status_code=303)
 
-@app.post("logout")
+
+@app.post("/logout")
 def logout(request: Request):
     request.session.clear()
     return RedirectResponse(url="/login", status_code=303)
@@ -79,7 +83,7 @@ def index(request: Request, chart_type: str = "pie"):
             "trend_image": trend_image,
             "chart_type": chart_type,
             "categories": CATEGORIES,
-            "today": today().isoformat(),
+            "today": today.isoformat(),
             "username": request.session.get("username")
         }
     )
@@ -101,7 +105,7 @@ def add_expense_route(
 
 
 @app.post("/delete/{expense_id}")
-def delete_expense_route(expense_id: int):
+def delete_expense_route(request: Request, expense_id: int):
     user_id = get_current_user(request)
     if not user_id:
         return RedirectResponse(url="/login", status_code=303)
